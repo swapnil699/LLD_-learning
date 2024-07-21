@@ -7,70 +7,131 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public class Sorter implements Callable<List<Integer>> {
-    List<Integer> arrayToSort;
+    List<Integer> arr;
     ExecutorService ex;
-    Sorter(List<Integer> arrayToSort, ExecutorService ex){
-        this.arrayToSort = arrayToSort;
+
+    Sorter(List<Integer> arr, ExecutorService ex){
+        this.arr = arr;
         this.ex = ex;
     }
     @Override
     public List<Integer> call() throws Exception {
-        //Write the entire merge sort code
-        if(arrayToSort.size() <= 1){
-            return arrayToSort;
+        //base case
+        if(arr.size() == 1){
+            return  arr;
+        }
+        //find mid
+        int mid = arr.size() / 2;
+
+        //create list for half part
+        List<Integer>leftHalf = new ArrayList<>();
+        for(int i=0; i<mid; i++){
+            leftHalf.add(arr.get(i));
+        }
+        List<Integer>rightHalf = new ArrayList<>();
+        for(int i=mid; i< arr.size(); i++){
+            rightHalf.add(arr.get(i));
         }
 
-        int mid = arrayToSort.size() / 2;
-        /*
-        First half - 0 to mid - 1
-        second half - mid to size - 1
-         */
-
-        List<Integer> leftHalf = new ArrayList<>();
-        for(int i = 0 ; i < mid ; i++){
-            leftHalf.add(arrayToSort.get(i));
-        }
-
-        List<Integer> rightHalf = new ArrayList<>();
-        for(int i = mid ; i < arrayToSort.size() ; i++){
-            rightHalf.add(arrayToSort.get(i));
-        }
-
-        Sorter task1 = new Sorter(leftHalf, ex);
+        //again call
+        Sorter task1 = new Sorter(leftHalf,ex);
         Sorter task2 = new Sorter(rightHalf, ex);
 
-        Future<List<Integer>> leftSortedArray = ex.submit(task1);
-        Future<List<Integer>> rightSortedArray = ex.submit(task2);
-        leftHalf = leftSortedArray.get();
-        rightHalf = rightSortedArray.get();
+        Future<List<Integer>> leftsort = ex.submit(task1);
+        Future<List<Integer>> rightsort =ex.submit(task2);
 
-        /*
-        merge left and right half
-         */
+        leftHalf = leftsort.get();
+        rightHalf = rightsort.get();
 
-        List<Integer> finalMergedArray = new ArrayList<>();
+        int i =0, j=0;
+        List<Integer> ans = new ArrayList<>();
 
-        int i = 0 , j = 0;
-        while(i < leftHalf.size() && j < rightHalf.size()){
+        while (i < leftHalf.size() && j < rightHalf.size()){
             if(leftHalf.get(i) < rightHalf.get(j)){
-                finalMergedArray.add(leftHalf.get(i));
+                ans.add(leftHalf.get(i));
                 i++;
-            }else{
-                finalMergedArray.add(rightHalf.get(j));
+            }
+            else{
+                ans.add(rightHalf.get(j));
                 j++;
             }
         }
 
         while(i < leftHalf.size()){
-            finalMergedArray.add(leftHalf.get(i));
+            ans.add(leftHalf.get(i));
             i++;
         }
 
-        while(j < rightHalf.size()){
-            finalMergedArray.add(rightHalf.get(j));
+        while (j < rightHalf.size()){
+            ans.add(rightHalf.get(j));
             j++;
         }
-
-        return finalMergedArray;
+        return ans;
     }
+//    List<Integer> arrayToSort;
+//    ExecutorService ex;
+//    Sorter(List<Integer> arrayToSort, ExecutorService ex){
+//        this.arrayToSort = arrayToSort;
+//        this.ex = ex;
+//    }
+//    @Override
+//    public List<Integer> call() throws Exception {
+//        //Write the entire merge sort code
+//        if(arrayToSort.size() <= 1){
+//            return arrayToSort;
+//        }
+//
+//        int mid = arrayToSort.size() / 2;
+//        /*
+//        First half - 0 to mid - 1
+//        second half - mid to size - 1
+//         */
+//
+//        List<Integer> leftHalf = new ArrayList<>();
+//        for(int i = 0 ; i < mid ; i++){
+//            leftHalf.add(arrayToSort.get(i));
+//        }
+//
+//        List<Integer> rightHalf = new ArrayList<>();
+//        for(int i = mid ; i < arrayToSort.size() ; i++){
+//            rightHalf.add(arrayToSort.get(i));
+//        }
+//
+//        Sorter task1 = new Sorter(leftHalf, ex);
+//        Sorter task2 = new Sorter(rightHalf, ex);
+//
+//        Future<List<Integer>> leftSortedArray = ex.submit(task1);
+//        Future<List<Integer>> rightSortedArray = ex.submit(task2);
+//        leftHalf = leftSortedArray.get();
+//        rightHalf = rightSortedArray.get();
+//
+//        /*
+//        merge left and right half
+//         */
+//
+//        List<Integer> finalMergedArray = new ArrayList<>();
+//
+//        int i = 0 , j = 0;
+//        while(i < leftHalf.size() && j < rightHalf.size()){
+//            if(leftHalf.get(i) < rightHalf.get(j)){
+//                finalMergedArray.add(leftHalf.get(i));
+//                i++;
+//            }else{
+//                finalMergedArray.add(rightHalf.get(j));
+//                j++;
+//            }
+//        }
+//
+//        while(i < leftHalf.size()){
+//            finalMergedArray.add(leftHalf.get(i));
+//            i++;
+//        }
+//
+//        while(j < rightHalf.size()){
+//            finalMergedArray.add(rightHalf.get(j));
+//            j++;
+//        }
+//
+//        return finalMergedArray;
+//    }
 }
