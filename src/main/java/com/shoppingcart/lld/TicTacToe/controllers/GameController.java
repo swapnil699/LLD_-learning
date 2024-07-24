@@ -1,6 +1,7 @@
 package com.shoppingcart.lld.TicTacToe.controllers;
 
 import com.shoppingcart.lld.TicTacToe.exceptions.InvalidBotCountException;
+import com.shoppingcart.lld.TicTacToe.exceptions.InvalidMoveException;
 import com.shoppingcart.lld.TicTacToe.exceptions.InvalidPlayerCountException;
 import com.shoppingcart.lld.TicTacToe.models.Game;
 import com.shoppingcart.lld.TicTacToe.models.GameState;
@@ -19,7 +20,7 @@ public class GameController {
                 .build();
     }
 
-    public void makeMove(Game game){
+    public void makeMove(Game game) throws InvalidMoveException {
         game.makeMove();
     }
 

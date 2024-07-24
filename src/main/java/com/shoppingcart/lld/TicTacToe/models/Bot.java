@@ -2,6 +2,7 @@ package com.shoppingcart.lld.TicTacToe.models;
 
 //import TicTacToe.strategies.botwinningstrategies.BotwinningStrategy;
 
+import com.shoppingcart.lld.TicTacToe.factory.BotPlayingStrategyFactory;
 import com.shoppingcart.lld.TicTacToe.strategies.botwinningstrategies.BotwinningStrategy;
 
 public class Bot extends Player{
@@ -10,10 +11,10 @@ public class Bot extends Player{
     /*
     BOT bot = new BOT(name, symbol, difflevel, playstrategy);
      */
-    public Bot(String name, Symbol symbol, BotDifficultyLevel botDifficultyLevel, BotwinningStrategy botPlayingStrategy){
+    public Bot(String name, Symbol symbol, BotDifficultyLevel botDifficultyLevel){
         super(name, symbol, PlayerType.BOT);
         this.botDifficultyLevel = botDifficultyLevel;
-        this.botPlayingStrategy = botPlayingStrategy;
+        this.botPlayingStrategy = BotPlayingStrategyFactory.getBotPlayingStrategy(botDifficultyLevel);
     }
 
     public BotDifficultyLevel getBotDifficultyLevel() {
@@ -30,5 +31,11 @@ public class Bot extends Player{
 
     public void setBotPlayingStrategy(BotwinningStrategy botPlayingStrategy) {
         this.botPlayingStrategy = botPlayingStrategy;
+    }
+
+    @Override
+    public Move makeMove(Board board){
+        Move move = botPlayingStrategy.makeMove(board);
+        return move;
     }
 }
