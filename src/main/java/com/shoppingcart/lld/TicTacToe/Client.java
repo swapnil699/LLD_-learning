@@ -28,8 +28,8 @@ public class Client {
             int dimension = 3;
             List<Player> playerList = new ArrayList<>();
             playerList.add(new Player("Umang", new Symbol('X'), PlayerType.HUMAN));
-            playerList.add(new Player("Anmol", new Symbol('O'), PlayerType.HUMAN));
-//            playerList.add(new Bot("intelligentBot", new Symbol('O'), BotDifficultyLevel.EASY));
+          //  playerList.add(new Player("Anmol", new Symbol('O'), PlayerType.HUMAN));
+            playerList.add(new Bot("intelligentBot", new Symbol('O'), BotDifficultyLevel.EASY));
 
             List<WinningStrategy> winningStrategies = new ArrayList<>();
             winningStrategies.add(new RowWinningStrategy());
